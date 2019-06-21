@@ -16,72 +16,59 @@
 
 import axios from "axios";
 
-export const ADD_SMURF = "ADD_SMURF";
-export const FETCH_ERROR = "FETCH_ERROR";
+export const FETCHING_SMURFS = "FETCHING_SMURFS";
+export const FETCHING_SUCCESS = "FETCHING_SUCCESS";
+export const FETCHING_FAILURE = "FETCHING_FAILURE";
 
-export const GET_SMURFS = "GET_SMURFS";
-export const SMURF_ADDED = "SMURF_ADDED";
-
-export const UPDATE_SMURF = "UPDATE_SMURF";
-export const SMURF_UPDATED = "SMURF_UPDATED";
-
-export const DELETING_SMURF = "DELETING_SMURF";
-export const SMURF_DELETED = "SMURF_DELETED";
+ export const ADD_SMURFS_START = "ADD_SMURFS_START";
+ export const ADD_SMURFS = "ADD_SMURFS";
+ export const ADD_SMURF_FAILURE = "ADD_SMURF_FAILURE";
 
 
-export const addSmurf = () => dispatch => {
-  dispatch({ type: ADD_SMURF });
+export const getsmurf = (thegoods) => dispatch =>{
+  dispatch({type: FETCHING_SMURFS})
 
-  axios
-    .get("http://localhost:3333/smurfs")
-    .then(res => {
-      console.log("fetch smurfs res", res);
-      dispatch({ type: SMURF_ADDED, payload: res.data });
-    })
-    .catch(err => {
-      dispatch({ type: FETCH_ERROR });
-    });
-};
+   axios.get(
+      `http://localhost:3333/smurfs`, thegoods
+  )
+  .then(res =>{
+       console.log(res
+          )
+  //  localStorage.setItem('token', res.data.payload)
+      dispatch({
+          type:FETCHING_SUCCESS,
+          payload: res.data, 
 
-export const newSmurf = smurf => dispatch => {
-  dispatch({ type: GET_SMURFS });
+       })
+  })
+  .catch(err =>{
+      dispatch({
+          type:FETCHING_FAILURE,
+          payload: err
 
-  axios
-    .post("http://localhost:3333/smurfs", smurf)
-    .then(res => {
-      console.log("newSmurf", smurf);
-      console.log("newSmurf res", res);
-      dispatch({ type: SMURF_ADDED, payload: res.data });
-    })
-    .catch(err => {
-      console.log("newSmurf", smurf);
+       })
+  })
 
-      dispatch({ type: FETCH_ERROR, payload: err });
-    });
-};
 
-export const deleteSmurf = id => dispatch => {
-  dispatch({ type: DELETING_SMURF });
 
-  axios
-    .delete(`http://localhost:3333/smurfs/${id}`)
-    .then(res => {
-      dispatch({ type: SMURF_DELETED, payload: res.data });
-    })
-    .catch(err => {
-      dispatch({ type: FETCH_ERROR, payload: err });
-    });
-};
+ }
 
-export const updateSmurf = (id, info) => dispatch => {
-  dispatch({ type: UPDATE_SMURF });
+ export const addSmurf = (smurf) => dispatch =>{
+  axios.post(
+      `http://localhost:3333/smurfs`, smurf,
+  )
+      .then(res =>{
+          dispatch({ 
+              type:ADD_SMURFS,
+              payload: res.data 
 
-  axios
-    .put(`http://localhost:3333/smurfs/${id}`, info)
-    .then(res => {
-      dispatch({ type: SMURF_UPDATED, payload: res.data });
-    })
-    .catch(err => {
-      dispatch({ type: FETCH_ERROR, payload: err });
-    });
-};
+           })
+      })
+      .catch(err =>
+        dispatch({
+          type:ADD_SMURF_FAILURE,
+          payload:err
+        })
+        )
+
+ } 

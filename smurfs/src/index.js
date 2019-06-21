@@ -12,7 +12,7 @@ const store = createStore(smurfReducer, applyMiddleware(thunk, logger));
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+      <App />
   </Provider>,
   document.getElementById("root")
 );
